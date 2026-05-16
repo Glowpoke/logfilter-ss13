@@ -1,0 +1,34 @@
+name: Build LogFilter
+
+on: [push, pull_request]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build (Linux)
+        run: |
+          rustc --edition 2021 -C opt-level=2 -C target-feature=+crt-static src/main.rs -o logfilter
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: logfilter-linux
+          path: logfilter
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build (Windows)
+        run: |
+          rustc --edition 2021 -C opt-level=2 -C target-feature=+crt-static src/main.rs -o logfilter.exe
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: logfilter-windows
+          path: logfilter.exe
